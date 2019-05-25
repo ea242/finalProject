@@ -1,0 +1,85 @@
+<head>
+    <!-- BEGIN Pre-requisites -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+    </script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
+    </script>
+  <script>
+      function start() {
+        gapi.load('auth2', function() {
+          auth2 = gapi.auth2.init({
+            client_id: '484700988211-vcr1auufb56kodb8i02ljfspffhuvtil.apps.googleusercontent.com', 
+	    //client_id: '484700988211-vcr1auufb56kodb8i02ljfspffhuvtil.apps.googleusercontent.com',
+            // Scopes to request in addition to 'profile' and 'email'
+            //scope: 'additional_scope'
+            scope: 'profile',
+            scope: 'email'
+          });
+        });
+      }
+    </script>
+  </head>
+  
+  
+  
+  <body>  
+  
+  
+  <!-- GOOGLE PLUS SIGN IN-->
+  <button id="signinButton">Sign in with Google</button>
+<script>
+  $('#signinButton').click(function() {
+    // signInCallback defined in step 6.
+    auth2.grantOfflineAccess().then(signInCallback);
+  });
+</script>
+  
+  <div id="result"></div>
+  
+  <script>
+      function signInCallback(authResult) {
+        if (authResult['code']) {
+      
+          // Hide the sign-in button now that the user is authorized, for example:
+          $('#signinButton').attr('style', 'display: none');
+      
+          // Send the code to the server
+          $.ajax({
+            type: 'POST',
+            url: '/gconnect?state={{STATE}}',
+            processData: false,
+            data: authResult['code'],
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            contentType: 'application/octet-stream; charset=utf-8',
+            success: function(result) {
+                  // Handle or verify the server response if necessary.
+              if (result) {
+                $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...');
+                setTimeout(function() {
+                  window.location.href = "/catalog";
+                }, 4000);
+              } else if (authResult['error']) {
+                console.log('There was an error: ' + authResult['error']);
+              } else {
+                $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+              }
+            },
+            processData: false,
+            data: authResult['code']
+          });
+        } else {
+          console.log('There was an error merp: ' + result);// There was an error.
+        }
+      }
+      </script>
+      
+  
+  
+  
+  <!--END GOOGLE PLUS SIGN IN -->
+  
+    </body>
+  
+    </html>

@@ -1,0 +1,34 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+	<div class="row banner menu">
+		<div class="col-md-11 col-md-offset-1 padding-none">
+			<h1>Catalogs</h1>
+		</div>
+	</div>
+	
+<div class = 'flash'>
+	{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+{% for message in messages %}
+  <li> <strong> {{ message }} </strong> </li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+</div>
+	{% for catalog in catalogs %}
+		<a href = "{{url_for('showItem', catalog_id = catalog.id)}}">
+			<div class="row">
+				<div class="col-md-1"></div>
+					<div class="col-md-10 catalog-list">
+						<h3>{{catalog.name}}</h3>
+					</div>
+				<div class="col-md-1"></div>
+			</div>
+		</a>
+	{% endfor %}
+{% endblock %}
